@@ -127,3 +127,17 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Bak files
+*.bak
+
+# Training History files
+history.csv
+
+# Models Created
+*.h5
+
+# Generated images
+data/affine/
+data/dcgan/
+data/lsgan/
