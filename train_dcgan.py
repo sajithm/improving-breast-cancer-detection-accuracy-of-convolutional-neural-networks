@@ -74,7 +74,7 @@ class DCGAN():
         model.add(BatchNormalization(momentum=0.5))
         model.add(Conv2D(3, kernel_size=3, padding="same"))
         model.add(Activation("tanh"))
-        model.summary()
+        #model.summary()
 
         noise = Input(shape=noise_shape)
         img = model(noise)
@@ -102,7 +102,7 @@ class DCGAN():
         model.add(Dropout(0.25))
         model.add(Flatten())
         model.add(Dense(1, activation='sigmoid'))
-        model.summary()
+        #model.summary()
 
         img = Input(shape=self.img_shape)
         validity = model(img)

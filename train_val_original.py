@@ -40,6 +40,8 @@ model.add(Dropout(0.5))
 model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
+#model.summary()
+
 model.compile(loss='binary_crossentropy',
               optimizer=optimizers.Nadam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004),
               metrics=['accuracy'])
