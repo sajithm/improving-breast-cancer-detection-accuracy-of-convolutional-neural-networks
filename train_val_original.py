@@ -1,11 +1,10 @@
-from keras.layers import Conv2D, MaxPooling2D
-from keras.layers import Activation, Dropout, Flatten, Dense
-from keras import backend as K
-from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
-from keras import optimizers, callbacks
+import tensorflow as tf
+from tensorflow.keras.layers import Conv2D, MaxPooling2D
+from tensorflow.keras.layers import Activation, Dropout, Flatten, Dense
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.models import Sequential
+from tensorflow.keras import optimizers, callbacks
 import time, json, os
-import matplotlib.pyplot as plt
 
 data_dir_training = "./data/original"
 data_dir_validation = "./data/validation"
@@ -63,7 +62,8 @@ validation_generator = test_datagen.flow_from_directory(
     class_mode='binary')
 
 callback_log = callbacks.CSVLogger(path_history, append=True)
-callback_earlystop = callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10)
+#callback_earlystop = callbacks.EarlyStopping(monitor='val_loss', min_delta=1e-4, patience=10)
+#callback_reducelr = callbacks.ReduceLROnPlateau(monitor='val_loss', factor=1/3, patience=10, min_lr=1e-6)
 callback_model_save = callbacks.ModelCheckpoint(filepath=path_model, save_weights_only=False, monitor='val_accuracy', mode='max', save_best_only=True)
 
 hist = model.fit(
@@ -72,7 +72,7 @@ hist = model.fit(
     epochs=epochs,
     validation_data=validation_generator,
     validation_steps=nb_validation_samples // batch_size,
-    callbacks=[callback_log, callback_earlystop, callback_model_save])
+    callbacks=[callback_log, callback_model_save])
 
 time_out = time.time()
 print('\n', 'Time cost:', '\n', time_out-time_in)
