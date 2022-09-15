@@ -1,19 +1,21 @@
-from keras.layers import Input, Dense, Reshape, Flatten, Dropout
-from keras.layers import BatchNormalization, Activation, MaxPooling2D, LeakyReLU
-from keras.layers.convolutional import UpSampling2D, Conv2D
-from keras.models import Sequential, Model
-from keras.optimizers import Nadam
+import tensorflow as tf
+from tensorflow.keras.layers import Input, Dense, Reshape, Flatten, Dropout
+from tensorflow.keras.layers import BatchNormalization, Activation, MaxPooling2D, LeakyReLU
+from tensorflow.keras.layers import UpSampling2D, Conv2D
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.optimizers import Nadam
 from PIL import Image
-import glob, numpy
+import os, glob, numpy, argparse
 import matplotlib.pyplot as plt
 import time
 import sys
 import numpy as np
+import warnings
+warnings.simplefilter("ignore")
 
 rnd_len = 100  # random vector length for generator
 img_count = 1170
 batch_size = 30
-epochs = 2000 * img_count // batch_size
 
 class DCGAN():
     def __init__(self):
@@ -22,7 +24,7 @@ class DCGAN():
         self.img_depth = 3
         self.img_shape = (self.img_width, self.img_height, self.img_depth)
 
-        optimizer = Nadam(lr=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
+        optimizer = Nadam(learning_rate=1e-4, beta_1=0.9, beta_2=0.999, epsilon=1e-08, schedule_decay=0.004)
 
         # Build and compile the discriminator
         self.discriminator = self.build_discriminator()
@@ -154,10 +156,10 @@ class DCGAN():
             g_loss = self.combined.train_on_batch(noise, np.ones((batch_size, 1)))
 
             # Plot the progress
-            print("%d [D loss: %f, acc.: %.2f%%] [G loss: %f]" % (epoch, d_loss[0], 100 * d_loss[1], g_loss))
+            print("%d [D loss: %f, D acc.: %f, G loss: %f]" % (epoch, d_loss[0], d_loss[1], g_loss))
 
             # If at save interval => save generated image samples
-            if epoch % save_interval == 0:
+            if epoch % save_interval == 0 or epoch == epochs:
                 self.generator.save(model_path)
 
     '''def save_imgs(self, epoch):  # print samples from generator
@@ -181,12 +183,32 @@ class DCGAN():
 
 
 if __name__ == '__main__':  # run
-    labels = ["0", "1"]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--data_dir", help="Data Folder path", type=str, required=True)
+    parser.add_argument("-l", "--labels", help="Labels to Process. The application will process data from the subfolder of name label within the data_dir", type=str, required=True)
+    parser.add_argument("-m", "--model_dir", help="Path to store model", type=str, required=False)
+    parser.add_argument("-e", "--epochs", help = "Epochs", default=3000, type=int, required=False)
+    args = parser.parse_args()
+    params = vars(args)
+    
+    assert params["labels"], "labels is required"
+    assert params["data_dir"], "data_dir is required"
+    assert params["model_dir"], "model_dir is required"
+    
+    epochs = params["epochs"] * img_count // batch_size
+    labels = [s.strip() for s in params["labels"].split(',')]
+    data_dir = params["data_dir"] 
+    model_dir = params["model_dir"]
+    
+    assert os.path.exists(data_dir), f"{data_dir} doesn't exist"
+    assert os.path.exists(model_dir), f"{model_dir} doesn't exist"
+    
     for label in labels:
-        data_folder = f"./data/original/{label}"
-        save_model_path = f"./data/dcgan/generator_{label}.h5"
+        data_path = os.path.join(data_dir, label)
+        assert os.path.exists(data_path), f"{data_path} doesn't exist"
+        save_model_path = os.path.join(model_dir, f"generator_{label}.h5")
         dcgan = DCGAN()
         time_in = time.time()   # record using time start
-        dcgan.train(epochs=epochs, batch_size=batch_size, save_interval=img_count // batch_size, data_dir=data_folder, model_path=save_model_path)
+        dcgan.train(epochs=epochs, batch_size=batch_size, save_interval=img_count // batch_size, data_dir=data_path, model_path=save_model_path)
         time_out = time.time()  # record using time end
         print('\n', 'Time cost:', '\n', time_out-time_in)

@@ -131,6 +131,9 @@ dmypy.json
 # Bak files
 *.bak
 
+#Checkpoints
+checkpoints/
+
 # Training History files
 history.csv
 

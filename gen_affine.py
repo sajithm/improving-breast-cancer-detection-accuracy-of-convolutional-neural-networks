@@ -5,7 +5,7 @@ import time, json, os
 
 
 # dimensions of our images.
-img_width, img_height = 299, 299
+img_width, img_height = 320, 320
 batch_size = 26
 
 data_dir_in = "./data/original"
