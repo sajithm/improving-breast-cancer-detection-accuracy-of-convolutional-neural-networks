@@ -138,9 +138,12 @@ checkpoints/
 history.csv
 
 # Models Created
-*.h5
+models/
 
 # Generated images
 data/affine/
 data/dcgan/
 data/lsgan/
+data/original+affine/
+data/original+dcgan/
+data/original+lsgan/
