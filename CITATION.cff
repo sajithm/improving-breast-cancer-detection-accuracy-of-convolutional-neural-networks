@@ -1,0 +1,20 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Improving Breast Cancer Detection Accuracy Of
+  Convolutional Neural Networks
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Sajith
+    name-particle: Madhavan
+    email: sajithm@msn.com
+    family-names: Madhavan
+    orcid: 'https://orcid.org/0000-0002-8227-6144'
+repository-code: >-
+  https://github.com/sajithm/improving-breast-cancer-detection-accuracy-of-convolutional-neural-networks
+license: GPL-3.0-or-later
