@@ -11,7 +11,6 @@ message: >-
 type: software
 authors:
   - given-names: Sajith
-    name-particle: Madhavan
     email: sajithm@msn.com
     family-names: Madhavan
     orcid: 'https://orcid.org/0000-0002-8227-6144'
